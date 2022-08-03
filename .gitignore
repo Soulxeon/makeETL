@@ -1,0 +1,4 @@
+__pycache__/
+# ignore the file database
+/db/database.ini
+tmp/
