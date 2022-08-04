@@ -15,7 +15,7 @@ def connect():
         # execute a statement
         print('PostgreSQL database version:')
         cur.execute('SELECT version()')
-        cur.execute(f"""CREATE TABLE IF NOT EXISTS {settings.name_project} (
+        cur.execute(f"""CREATE TABLE IF NOT EXISTS {settings.name_project.lower()} (
                         filepath varchar(5000) NOT NULL,                        
                         workspace varchar(250) ,
                         dataset varchar(250) ,
@@ -25,14 +25,14 @@ def connect():
                         imageType varchar(250) ,
                         startDepth numeric ,
                         endDepth numeric ,
-                        startBox numeric ,
-                        endBox numeric ,
+                        startBox smallint ,
+                        endBox smallint ,
                         status varchar(50) ,
                         flag_error varchar(50) ,
                         condition_error varchar(50),
-                        exif numeric,
-                        width numeric ,
-                        height numeric,
+                        exif smallint,
+                        width smallint ,
+                        height smallint,
                         img_obs varchar(50)
                          );"""
                     )

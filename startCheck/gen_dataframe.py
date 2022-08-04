@@ -30,6 +30,20 @@ class EtlList:
                 for elem in emptyDirs: 
                     f.write(f'{elem}\n')              
             f.close()
+
+    def readQuick(self):
+        for name in glob.glob(self.path + '**\*.[jpt][pni][gf]*', recursive=True):
+            EtlList.etl.loc[len(EtlList.etl.index),'filePath'] = name
+            EtlList.count += 1
+            if EtlList.count % 1000 == 0:
+                print("{} files processed succesfully".format(EtlList.count))
+        
+        EtlList.etl['dataset'] = EtlList.etl['filePath'].str.split("\\").str[self.n_dataset]
+        EtlList.etl['collection'] = EtlList.etl['filePath'].str.split("\\").str[self.n_entity]
+        EtlList.etl['filename'] = EtlList.etl['filePath'].str.split("\\").str[-1]
+        EtlList.etl['status'] = 'Pending'
+        EtlList.etl['flag_error'] = 'None'
+        print("total of {} files processed succesfully".format(EtlList.count))    
     
     def readFolder(self):
         for name in glob.glob(self.path + '**\*.[jpt][pni][gf]*', recursive=True):

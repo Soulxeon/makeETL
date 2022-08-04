@@ -7,10 +7,10 @@ def init():
     global depth_check
     global name_project
 
-    path = r'H:\ExifTest\\'
-    code_project = 'IM6942'
+    path = r'H:\A0061_YamanaGold_CerroMorro\Old_Batch\\'
+    code_project = 'A0061'
     depth_check = False
-    img_process = True
+    img_process = False
     name_project = path.split('\\')[1]
 
     print("Reading Project: " + code_project)
