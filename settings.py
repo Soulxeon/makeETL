@@ -8,7 +8,8 @@ def init():
     global name_project
 
     path = r'H:\A0061_YamanaGold_CerroMorro\Old_Batch\\'
-    code_project = 'A0061'
+    path = r'H:\ExifTest\\'
+    code_project = 'IM6942'
     depth_check = False
     img_process = False
     name_project = path.split('\\')[1]
