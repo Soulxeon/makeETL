@@ -1,11 +1,8 @@
 import pandas as pd
 import settings
 
-def rawEtlcsv(df):
-     df.to_csv(settings.path + settings.name_project + '_RawPreview.csv', index=False)
-
-def etlDB(df):
-     df.to_csv(settings.path + settings.name_project + '_etlDB.csv', index=False)
+def etlToCsv(df,path):
+     df.to_csv(path, index=False)
 
 def imageSettingEtlcsv(df):
 

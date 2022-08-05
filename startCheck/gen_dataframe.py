@@ -2,9 +2,6 @@ import glob
 import os
 import pandas as pd
 import settings
-from visualCheck import visualcheck
-from validations import filenamecheck
-
 class EtlList:
 
     etl = pd.DataFrame(columns=['filepath', 'workspace', "dataset", "collection", "filename", 'imageryType',
@@ -44,29 +41,4 @@ class EtlList:
         EtlList.etl['status'] = 'Pending'
         EtlList.etl['flag_error'] = 'None'
         print("total of {} files processed succesfully".format(EtlList.count))    
-    
-    def readFolder(self):
-        for name in glob.glob(self.path + '**\*.[jpt][pni][gf]*', recursive=True):
-            dataset = name.split("\\")[self.n_dataset]
-            entity = name.split("\\")[self.n_entity]
-            filename = name.split("\\")[-1]
-            imageType = filenamecheck.checkImageType(filename)
-            if settings.depth_check is True:
-                startdepth, enddepth = filenamecheck.checkStartEndDepth(filename)
-            else:
-                startdepth, enddepth = ['', '']
-
-            if settings.img_process is True:
-                exif_info, width, height, img_obs = visualcheck.infoPreview(name)
-            else:
-                exif_info, width, height, img_obs = ['', '', '', '']
-
-            EtlList.etl.loc[len(EtlList.etl.index)] = [name,'',dataset, entity, filename, '', imageType, startdepth,
-                                    enddepth,'','','Pending','None','', exif_info, width, height, img_obs]
-
-            EtlList.count += 1
-            if EtlList.count % 1000 == 0:
-                print("{} files processed succesfully".format(EtlList.count))
-
-        print("total of {} files processed succesfully".format(EtlList.count))
 

@@ -10,7 +10,7 @@ def checkTable():
 
         cur = conn.cursor()
 
-        cur.execute(f"select exists(select * from pg_tables where tablename ='{settings.name_project.lower()}');")
+        cur.execute(f"select exists(select * from pg_tables where tablename ='{settings.table_name}');")
         return(cur.fetchone()[0])
  
     except (Exception, psycopg2.DatabaseError) as error:
@@ -36,14 +36,14 @@ def mergeTable():
         
         print('temp_merge created...')
 
-        cur.execute(f"""COPY temp_merge FROM '{settings.path + settings.name_project}_RawPreview.csv' DELIMITER ',' CSV HEADER  ;""")
+        cur.execute(f"""COPY temp_merge FROM '{settings.temp_csv}' DELIMITER ',' CSV HEADER  ;""")
 
         cur.execute(f"""ALTER TABLE temp_merge ADD COLUMN project_code varchar(50);
                         UPDATE temp_merge  SET project_code = '{settings.code_project}';
                         ALTER TABLE temp_merge ALTER COLUMN project_code SET NOT NULL;"""
                     )
 
-        cur.execute(f""" INSERT INTO {settings.name_project.lower()}
+        cur.execute(f""" INSERT INTO {settings.table_name}
                          SELECT * FROM temp_merge  ;""")
         
         print('new data merge...')
@@ -64,14 +64,10 @@ def createETLTable():
     try:
 
         params = config()
-        print('Connecting to the PostgreSQL database...')
         conn = psycopg2.connect(**params)
 
         cur = conn.cursor()
-        # execute a statement
-        print('PostgreSQL database version:')
-        cur.execute('SELECT version()')
-        cur.execute(f"""CREATE TABLE IF NOT EXISTS {settings.name_project.lower()} (
+        cur.execute(f"""CREATE TABLE IF NOT EXISTS {settings.table_name} (
                         filepath varchar(5000) NOT NULL,                        
                         workspace varchar(250) ,
                         dataset varchar(250) ,
@@ -97,19 +93,16 @@ def createETLTable():
 					    collection, filename, imageryType, imageType, startDepth, endDepth, 
                         startBox, endBox, status, flag_error, condition_error, exif, width,
                         height, img_obs)
-                       FROM '{settings.path + settings.name_project + '_RawPreview.csv'}'
+                       FROM '{settings.temp_csv}'
                        DELIMITER ','
                        CSV HEADER;"""
                     )
-        cur.execute(f"""ALTER TABLE {settings.name_project} ADD COLUMN project_code varchar(50);
-                        UPDATE {settings.name_project}  SET project_code = '{settings.code_project}';
-                        ALTER TABLE {settings.name_project} ALTER COLUMN project_code SET NOT NULL;"""
+        cur.execute(f"""ALTER TABLE {settings.table_name} ADD COLUMN project_code varchar(50);
+                        UPDATE {settings.table_name}  SET project_code = '{settings.code_project}';
+                        ALTER TABLE {settings.table_name} ALTER COLUMN project_code SET NOT NULL;"""
                     )
 
-        # display the PostgreSQL database server version
-        db_version = cur.fetchone()
-        print(db_version)
-	# close the communication with the PostgreSQL
+        print(f"Table {settings.table_name} was created")
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)

@@ -2,6 +2,16 @@ from PIL import Image, ExifTags
 import cv2
 import numpy as np
 
+
+def readimage(name):
+    try:
+        Image.open(name)
+        return('')
+        pass
+
+    except:
+        return('Failed to read image')
+
 def infoPreview(name):
 
     try:

@@ -1,6 +1,7 @@
+import os
 import settings
+import format
 from startCheck.gen_dataframe import EtlList
-from startCheck import format
 from db_conn import checkTable, retrieveDB
 from validations import dropExistData
 
@@ -14,10 +15,9 @@ def check_init():
         #check special images .tiff .RAW .CR2
         folderdata.readQuick()
         folder_df = folderdata.etl
-        if settings.img_process:
-            format.imageSettingEtlcsv(folder_df)
-        format.rawEtlcsv(folder_df)
+        format.etlToCsv(folder_df,settings.temp_csv)
         checkTable.createETLTable()
+        os.remove(settings.temp_csv) 
 
     else:
 
@@ -33,17 +33,12 @@ def check_init():
             print("There are no new images!")
         else:
             print("new images will be listed: " + str(len(new_data_filter)))
-            format.rawEtlcsv(new_data_filter)
+            format.etlToCsv(new_data_filter,settings.temp_csv)
             checkTable.mergeTable()
+            os.remove(settings.temp_csv) 
         
     all_data = retrieveDB.retrieveAllData()
-    format.etlDB(all_data)
-
-
-
-
+    format.etlToCsv(all_data,settings.db_csv)
 
 if __name__ == '__main__':
     check_init()
-
-
