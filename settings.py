@@ -7,15 +7,15 @@ def init():
     global depth_check
     global name_project
 
-    path = r'H:\A0061_YamanaGold_CerroMorro\Old_Batch\\'
+    # path = r'H:\A0061_YamanaGold_CerroMorro\Old_Batch\\'
     path = r'H:\ExifTest\\'
     code_project = 'IM6942'
     depth_check = False
     img_process = False
     name_project = path.split('\\')[1]
 
-    print("Reading Project: " + code_project)
-    print("Folder Selected: " + path)
+    print('                    SETTINGS')
+    print("Reading Project: " + code_project +"   ||" +"  Folder Selected: " + path)
 
     if img_process is True:
         print("image Process Selected")
@@ -24,6 +24,8 @@ def init():
     
     if depth_check is True:
         print("Intial Depths check Selected")
+
+
 
 
 

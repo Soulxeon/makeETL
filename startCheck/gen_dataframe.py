@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import settings
 from visualCheck import visualcheck
-from startCheck import filenamecheck
+from validations import filenamecheck
 
 class EtlList:
 
