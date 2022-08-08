@@ -1,76 +1,84 @@
-import re
 import pandas as pd
-from visualCheck import visualcheck
 
-def checkImageRead(df):
-    df_copy = df[['filepath','condition_error','Excluded','flag_error']]
-    df_copy['condition_error'] = df_copy.apply(lambda row: visualcheck.readimage(row['filepath']),axis=1)
-    df_failedimg =  df_copy.loc[(df_copy['condition_error'] == 'Failed to read image')]
-    df_failedimg['status'] = 'Excluded'
-    df_failedimg['flag_error'] = 'Error'
-    if len(df_failedimg) != 0:
-        print(f'found {str(len(df_failedimg))} corrupted images')
-        
-        pass
-    else:
-        return('there are no corrupted images')
+class FnameExt:
 
+    ext_df = pd.DataFrame(columns=['filepath', 'workspace', "dataset", "collection", "filename", 'imagerytype',
+                                       'imageType', 'startDepth', 'endDepth', 'startbox','endbox','status','flag_error',
+                                       'condition_error','exif', 'width', 'height','img_obs','project_code'])
 
-def checkImageType(filename):
+    def __init__(self,df) :
+        self.df = df
+        FnameExt.ext_df = df
 
-    dry = ["dry", "Dry", "DRY"]
-    wet = ["wet", "Wet", "WET"]
+    def fnameTransform(self):
 
-    if any(dry in filename for dry in dry):
-        imageType = 'Dry'
-    elif any(wet in filename for wet in wet):
-        imageType = 'Wet'
-    else:
-        imageType = ''
+        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename'].str.replace('(\s\s+)', ' ', regex=True)
+        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.replace("[#,@,&,!,']", '').str.replace("&", '-')
+        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.upper()
+        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].replace({ '.JPG' : '', '.PNG' : '', '.JPEG' : '' }, regex=True)
+        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.replace(",", ".").str.replace(" ", "_")
+        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.replace("__", "_")
 
-    return (imageType)
+    def fnameCopy(self):
 
-def checkStartEndDepth(filename):
-    decimal_expression = r'(\d+\.\d+)'
+        FnameExt.ext_df.loc[FnameExt.ext_df['filename_fix'].str.contains('COP'),'condition_error'] = 'Check Copy'
 
-    result = re.findall(decimal_expression, filename)
+    def fnameSamples(self):
+
+        FnameExt.ext_df.loc[FnameExt.ext_df['filename_fix'].str.contains('DETA|SAMPL'),'imageType'] = 'Sample'
     
-    try:
-        start_depth = result[0]
-    except:
-        start_depth = ''
-    try:
-        end_depth = result[-1]
-    except:
-        end_depth = ''
-    if start_depth == end_depth:
-        end_depth = ''
+    def fnameWetDry(self):
 
-    return ([start_depth, end_depth])
+        # FnameExt.ext_df.loc[FnameExt.ext_df['filepath'].str.upper().str.contains('DRY|_D'),'imageType'] = 'DryUncropped'
+        # FnameExt.ext_df.loc[FnameExt.ext_df['filepath'].str.upper().str.contains('WET|_W|'),'imageType'] = 'WetUncropped'
+        FnameExt.ext_df.loc[FnameExt.ext_df['filename_fix'].str.contains('DRY|_D'),'imageType'] = 'DryUncropped'
+        FnameExt.ext_df.loc[FnameExt.ext_df['filename_fix'].str.contains('WET|_W'),'imageType'] = 'WetUncropped'
+    
+    def fnameSetImgry(self):
+
+        FnameExt.ext_df.loc[FnameExt.ext_df['imageType'].str.contains('Uncropped'),'imageryType'] = 'Core Boxes'
+        FnameExt.ext_df.loc[FnameExt.ext_df['imageType'] == 'Sample', 'imageryType'] = 'Core Boxes'
 
 
-# def readFolder(self):
-#     for name in glob.glob(self.path + '**\*.[jpt][pni][gf]*', recursive=True):
-#         dataset = name.split("\\")[self.n_dataset]
-#         entity = name.split("\\")[self.n_entity]
-#         filename = name.split("\\")[-1]
-#         imageType = filenamecheck.checkImageType(filename)
-#         if settings.depth_check is True:
-#             startdepth, enddepth = filenamecheck.checkStartEndDepth(filename)
-#         else:
-#             startdepth, enddepth = ['', '']
+    #box number
+        # if filename *BX* or *BOX*
+        #  \d+- or _+d
+        
+    def fnameDepths(self):
 
-#         if settings.img_process is True:
-#             exif_info, width, height, img_obs = visualcheck.infoPreview(name)
-#         else:
-#             exif_info, width, height, img_obs = ['', '', '', '']
+        FnameExt.ext_df['onlynumbers'] = FnameExt.ext_df['filename_fix'].str.replace("[A-Z]+[0-9]+", "", regex=True)
+        FnameExt.ext_df['onlynumbers'] = FnameExt.ext_df['onlynumbers'].str.replace("[A-Z]", "", regex=True)
+        FnameExt.ext_df['depths'] = FnameExt.ext_df['onlynumbers'].str.findall(r'(\d+\.\d+)-(\d+\.\d+)')
+        # FnameExt.ext_df.loc[(pd.isnull(FnameExt.ext_df['depths'])),'depths'] = FnameExt.ext_df['filename_fix'].str.findall(r'(\d+\.\d+)_(\d+\.\d+)')
+        FnameExt.ext_df.loc[(FnameExt.ext_df['depths'].str.len()==0),'depths'] = FnameExt.ext_df['onlynumbers'].str.findall(r'(\d+\.\d+)_(\d+\.\d+)')
+        FnameExt.ext_df.loc[(FnameExt.ext_df['depths'].str.len()==0),'depths'] = FnameExt.ext_df['onlynumbers'].str.findall(r'(\d+\.\d+)-(\d+)')
+        FnameExt.ext_df.loc[(FnameExt.ext_df['depths'].str.len()==0),'depths'] = FnameExt.ext_df['onlynumbers'].str.findall(r'(\d+)-(\d+\.\d+)')
+        FnameExt.ext_df.loc[(FnameExt.ext_df['depths'].str.len()==0),'depths'] = FnameExt.ext_df['onlynumbers'].str.findall(r'(\d+\.\d+)_(\d+)')
+        FnameExt.ext_df.loc[(FnameExt.ext_df['depths'].str.len()==0),'depths'] = FnameExt.ext_df['onlynumbers'].str.findall(r'(\d+)_(\d+\.\d+)')
+        FnameExt.ext_df.loc[(FnameExt.ext_df['depths'].str.len()==0),'depths'] = FnameExt.ext_df['onlynumbers'].str.findall(r'(\d+)-(\d+)')
+        FnameExt.ext_df.loc[(FnameExt.ext_df['depths'].str.len()==0),'depths'] = FnameExt.ext_df['onlynumbers'].str.findall(r'(\d+)_(\d+)')
 
-#         EtlList.etl.loc[len(EtlList.etl.index)] = [name,'',dataset, entity, filename, '', imageType, startdepth,
-#                                 enddepth,'','','Pending','None','', exif_info, width, height, img_obs]
+        # pd.to_numeric(FnameExt.ext_df['startDepth'])
+        # pd.to_numeric(FnameExt.ext_df['endDepth'])
 
-#         EtlList.count += 1
-#         if EtlList.count % 1000 == 0:
-#             print("{} files processed succesfully".format(EtlList.count))
+        # print(FnameExt.ext_df)
 
-#     print("total of {} files processed succesfully".format(EtlList.count))
+        FnameExt.ext_df['startDepth'] = FnameExt.ext_df['depths'].str[-1].str[0].apply(lambda x: float(x))
+        FnameExt.ext_df['endDepth'] = FnameExt.ext_df['depths'].str[-1].str[1].apply(lambda x: float(x))
+
+        # pd.to_numeric(FnameExt.ext_df['startDepth'],errors='coerce')
+        # pd.to_numeric(FnameExt.ext_df['endDepth'],errors='coerce')
+
+        # print(FnameExt.ext_df.dtypes)
+
+
+        # print( FnameExt.ext_df)
+
+        # FnameExt.ext_df.loc[(FnameExt.ext_df['startDepth'] > FnameExt.ext_df['endDepth']) | (abs(FnameExt.ext_df['startDepth'] - FnameExt.ext_df['endDepth']) > 100 ),'startDepth'] = ''
+        # FnameExt.ext_df.loc[(FnameExt.ext_df['startDepth'] > FnameExt.ext_df['endDepth']) | (abs(FnameExt.ext_df['startDepth'] - FnameExt.ext_df['endDepth']) > 100 ),'endDepth'] = ''
+    
+    def dropExtractColumns(self):
+        FnameExt.ext_df = FnameExt.ext_df.drop(columns= ['depths','filename_fix','onlynumbers'])
+
+
 

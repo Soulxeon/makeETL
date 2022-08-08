@@ -1,75 +1,52 @@
 from PIL import Image, ExifTags
-import cv2
-import numpy as np
+import pandas as pd
+import settings
+from db_conn import tmp_tables
+import format
 
 
 def readimage(name):
     try:
         Image.open(name)
         return('')
-        pass
-
     except:
         return('Failed to read image')
 
-def infoPreview(name):
+def checkImageRead(df):
+    df_copy = df[['filepath','status','flag_error','condition_error']]
+    df_copy['condition_error_example'] = df_copy.apply(lambda row: readimage(row['filepath']),axis=1)
+    df_failedimg =  df_copy.loc[(df_copy['condition_error_example'] == 'Failed to read image')]
+    df_failedimg['status'] = 'Excluded'
+    df_failedimg['flag_error'] = 'Error'
+    if len(df_failedimg) > 0:
+        print(f'found {str(len(df_failedimg))} corrupted images')
+        format.etlToCsv(df_failedimg,settings.error_image)
+        tmp_tables.merge_errorImgs()
+        print('files excluded merged')
+    else:
+        print('there are no corrupted images')
 
+def imageProperties(name):
+
+    image = Image.open(name)
     try:
 
-        image = Image.open(name)
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
 
-        try:
-
-            for orientation in ExifTags.TAGS.keys():
-                if ExifTags.TAGS[orientation] == 'Orientation':
-                    break
-
-            exif = dict(image._getexif().items())
-            exif_info = str(exif[orientation])
-            if exif_info == 3:
-                img_obs = "image rotated 180"
-            elif exif_info == 6:
-                img_obs = "image rotated 270"
-            elif exif_info == 8:
-                img_obs = "image rotated 90"
-            else:
-                img_obs = ""
-
-
-        except:
-            exif_info = 0
-
-        width, height = image.size
-
-        if width < height :
-            img_obs = "Vertical Image"
+        exif = dict(image._getexif().items())
+        exif_info = str(exif[orientation])
+        width,height = image.size
+        return ([int(exif_info),width,height])
 
     except:
-        exif_info = ""
-        width = ""
-        height = ""
-        img_obs = "Corrupted image" 
+        return ([0,0,0])
 
-    return([exif_info, width, height, img_obs])
 
-def checkWhitePixels(img):
+def checkImageProperties(df):
+    df['img_properties'] = df.apply(lambda x: imageProperties(x['filepath']),axis=1)
+    df[['exif','width','height']] = pd.DataFrame(df['img_properties'].tolist(), index= df.index)
+    df = df.drop(columns = 'img_properties')
+    return(df)
 
-    try:
-
-        image = cv2.imread(img)
-        (h, w) = image.shape[:2]
-        (cX, cY) = (w // 2, h // 2)
-        left = image[0:h, 0:cX]
-        right = image[0:h, cX:w]
-        up = image[0:cY, 0:w]
-        down = image[cY:h, 0:w]
-        label = {"left": np.sum(left == 255), "right": np.sum(right == 255),
-                 "up": np.sum(up == 255), "down": np.sum(down == 255)}
-
-        fin_max = max(label, key=label.get)
-
-    except:
-
-        fin_max = ''
-
-    return(fin_max)

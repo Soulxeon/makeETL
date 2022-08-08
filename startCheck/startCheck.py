@@ -10,7 +10,7 @@ def check_init():
     if checkTable.checkTable() == False:
 
         print('First Time Project')
-        folderdata = EtlList(3, 4)
+        folderdata = EtlList(2, -2)
         folderdata.emptyDirs()
         #check special images .tiff .RAW .CR2
         folderdata.readQuick()
@@ -23,7 +23,7 @@ def check_init():
 
         print('There is already images in this project')
         exist_data = retrieveDB.retrieveFilepath()
-        new_data = EtlList(3, 4)
+        new_data = EtlList(2, -2)
         new_data.emptyDirs()
         #check special images .tiff .RAW .CR2
         new_data.readQuick()

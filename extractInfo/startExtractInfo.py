@@ -1,15 +1,33 @@
 from db_conn import retrieveDB
+from extractInfo.filenamecheck import FnameExt
+from visualCheck import visualcheck
+import pandas as pd
+import format
+import settings
 
 def extract_init():
     all_data = retrieveDB.retrieveAllData()
-        
-    #filepath normal
-        #validation file
-        #excluded corrupted images
-        #return [condition_error = 'Failed to read image', status = 'Excluded', flag_error = 'Error', filepath = 'filepath' ] => corrupted_imgs.csv
-        #temp table -> update Table 
+
+    visualcheck.checkImageRead(all_data)
     
-    filter_data = retrieveDB.retrieveAllData(mode='Pending') #imageType not Sample
+    filter_data = retrieveDB.retrieveAllData(mode='pending') #imageType not Sample
+
+    toext_data = FnameExt(filter_data)
+
+    toext_data.fnameTransform()
+    toext_data.fnameCopy()
+    toext_data.fnameSamples()
+    toext_data.fnameWetDry()
+    toext_data.fnameSetImgry()
+    toext_data.fnameDepths()
+    toext_data.dropExtractColumns()
+
+    data_extracted = toext_data.ext_df
+    data_imgcheck = visualcheck.checkImageProperties(data_extracted)
+
+
+    format.etlToCsv(data_imgcheck,settings.extract_visual)
+
 
 
         #extract class
