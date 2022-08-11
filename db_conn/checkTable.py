@@ -30,8 +30,8 @@ def mergeTable():
 
         cur = conn.cursor()
 
-        cur.execute("""CREATE TEMP TABLE temp_merge (filepath varchar, workspace varchar, dataset varchar,collection varchar,filename varchar,imageryType varchar,imageType varchar,
-                                                     startDepth numeric, endDepth numeric, startBox smallint, endBox smallint, status varchar, flag_error varchar,condition_error varchar,
+        cur.execute("""CREATE TEMP TABLE temp_merge (filepath varchar, workspace varchar, dataset varchar,collection varchar,filename varchar,imagerytype varchar,imagetype varchar,
+                                                     startdepth numeric, enddepth numeric, startbox smallint, endbox smallint, status varchar, flag_error varchar,condition_error varchar,
                                                      exif smallint, width smallint, height smallint ,img_obs varchar);""")
         
         print('temp_merge created...')
@@ -73,12 +73,12 @@ def createETLTable():
                         dataset varchar(250) ,
                         collection varchar(250) ,
                         filename varchar(5000) ,
-                        imageryType varchar(250) ,
-                        imageType varchar(250) ,
-                        startDepth numeric ,
-                        endDepth numeric ,
-                        startBox smallint ,
-                        endBox smallint ,
+                        imagerytype varchar(250) ,
+                        imagetype varchar(250) ,
+                        startdepth numeric ,
+                        enddepth numeric ,
+                        startbox smallint ,
+                        endbox smallint ,
                         status varchar(50) ,
                         flag_error varchar(50) ,
                         condition_error varchar(50),
@@ -90,8 +90,8 @@ def createETLTable():
                     )
         cur.execute(f'TRUNCATE TABLE {settings.name_project}')
         cur.execute(f"""COPY {settings.name_project}(filepath, workspace, dataset, 
-					    collection, filename, imageryType, imageType, startDepth, endDepth, 
-                        startBox, endBox, status, flag_error, condition_error, exif, width,
+					    collection, filename, imagerytype, imagetype, startdepth, enddepth, 
+                        startbox, endbox, status, flag_error, condition_error, exif, width,
                         height, img_obs)
                        FROM '{settings.temp_csv}'
                        DELIMITER ','

@@ -4,8 +4,8 @@ import pandas as pd
 import settings
 class EtlList:
 
-    etl = pd.DataFrame(columns=['filepath', 'workspace', "dataset", "collection", "filename", 'imageryType',
-                                'imageType', 'startDepth', 'endDepth', 'startBox','endBox','status','flag_error',
+    etl = pd.DataFrame(columns=['filepath', 'workspace', "dataset", "collection", "filename", 'imagerytype',
+                                'imagetype', 'startdepth', 'enddepth', 'startbox','endbox','status','flag_error',
                                 'condition_error','exif', 'width', 'height','img_obs'])
     
     count = 0
@@ -36,7 +36,7 @@ class EtlList:
                 print("{} files processed succesfully".format(EtlList.count))
         
         EtlList.etl['dataset'] = EtlList.etl['filepath'].str.split("\\").str[self.n_dataset]
-        EtlList.etl['collection'] = EtlList.etl['filepath'].str.split("\\").str[self.n_entity]
+        EtlList.etl['collection'] = EtlList.etl['filepath'].str.split("\\").str[self.n_entity].str.upper()
         EtlList.etl['filename'] = EtlList.etl['filepath'].str.split("\\").str[-1]
         EtlList.etl['status'] = 'Pending'
         EtlList.etl['flag_error'] = 'None'

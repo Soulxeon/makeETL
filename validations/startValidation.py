@@ -1,6 +1,9 @@
-# from db_conn import retrieveDB
+from db_conn import retrieveDB
+from validations import validations
 
-# def validation_init():
+def validation_init():
 
-#     retrieveDB.retrieveAllData(mode = 'Pending')
+    df_val = retrieveDB.retrieveAllData(mode = 'Pending')
+    df = validations.Validations(df_val)
+    df.depthVal()
 

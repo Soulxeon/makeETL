@@ -6,3 +6,4 @@ def dropSameData(df1,df2):
              .query('_merge == "right_only"')\
              .drop(columns='_merge')
     return (new_df)
+
