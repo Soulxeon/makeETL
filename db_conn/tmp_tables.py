@@ -13,18 +13,18 @@ def merge_errorImgs():
 
         cur.execute("""CREATE TEMP TABLE tmp_errorimgs (filepath varchar, status varchar, flag_error varchar, condition_error varchar);""")
         
-        print('temp_merge created...')
+        print('tmp_errorimgs created...')
 
         cur.execute(f"""COPY tmp_errorimgs FROM '{settings.error_image}' DELIMITER ',' CSV HEADER  ;""")
 
         cur.execute(f""" UPDATE {settings.table_name}
                          SET    flag_error = tmp_errorimgs.flag_error,
-	                            condition_result = tmp_errorimgs.condition_error,
+	                            condition_error = tmp_errorimgs.condition_error,
 	                            status = tmp_errorimgs.status
                                 FROM   tmp_errorimgs
                                 WHERE  {settings.table_name}.filepath = tmp_errorimgs.filepath;""")
 
-        cur.execute("DROP TABLE temp_merge;")
+        cur.execute("DROP TABLE tmp_errorimgs;")
 
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)

@@ -39,7 +39,11 @@ def retrieveAllData(mode = 'a'):
         cur = conn.cursor()
         # execute a statement
         if mode == 'pending':
-            cur.execute(f"""SELECT * FROM {settings.table_name} WHERE (status = 'Pending') AND imagetype is distinct from 'Sample';""")
+            cur.execute(f"""SELECT * FROM {settings.table_name} WHERE (status = 'Pending') AND imagetype is distinct from 'Sample' ORDERBY collection, filepath ;""")
+        elif mode == 'extract':
+            cur.execute(f"""SELECT * FROM {settings.table_name} WHERE (status = 'FirstCheck') AND imagetype is distinct from 'Sample'ORDERBY collection, filepath ;""")
+        elif mode == 'validation':
+            cur.execute(f"""SELECT * FROM {settings.table_name} WHERE (status = 'InfoExtracted') AND imagetype is distinct from 'Sample'ORDERBY collection, filepath ;""")
         else:
             cur.execute(f"""SELECT * FROM {settings.table_name};""")
 
@@ -49,7 +53,10 @@ def retrieveAllData(mode = 'a'):
         
         if mode == 'pending':
             print("Data retrieved: " + str(len(df)) + " pending Core Boxes Files in DB")
-        
+        elif mode == 'extract':
+            print("Data retrieved: " + str(len(df)) + " First check files going to extract info")
+        elif mode == 'validation':
+            print("Data retrieved: " + str(len(df)) + " First check files going to validation")
         else:
             print("All data retrieved: " + str(len(df)) + " Files in DB")
 

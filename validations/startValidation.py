@@ -3,7 +3,7 @@ from validations import validations
 
 def validation_init():
 
-    df_val = retrieveDB.retrieveAllData(mode = 'Pending')
+    df_val = retrieveDB.retrieveAllData(mode = 'validation')
     df = validations.Validations(df_val)
     df.depthVal()
 

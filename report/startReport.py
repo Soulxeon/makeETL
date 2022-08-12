@@ -1,6 +1,6 @@
 from db_conn import retrieveDB
 from report import report
-import format
+
 
 def report_init():
     df_retrieve = retrieveDB.retrieveAllData()

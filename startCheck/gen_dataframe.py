@@ -38,7 +38,7 @@ class EtlList:
         EtlList.etl['dataset'] = EtlList.etl['filepath'].str.split("\\").str[self.n_dataset]
         EtlList.etl['collection'] = EtlList.etl['filepath'].str.split("\\").str[self.n_entity].str.upper()
         EtlList.etl['filename'] = EtlList.etl['filepath'].str.split("\\").str[-1]
-        EtlList.etl['status'] = 'Pending'
+        EtlList.etl['status'] = 'FirstCheck'
         EtlList.etl['flag_error'] = 'None'
         print("total of {} files processed succesfully".format(EtlList.count))    
 

@@ -19,8 +19,8 @@ def verticalImg(df):
 
 def checkImageRead(df):
     df_copy = df[['filepath','status','flag_error','condition_error']]
-    df_copy['condition_error_example'] = df_copy.apply(lambda row: readimage(row['filepath']),axis=1)
-    df_failedimg =  df_copy.loc[(df_copy['condition_error_example'] == 'Failed to read image')]
+    df_copy['condition_error'] = df_copy.apply(lambda row: readimage(row['filepath']),axis=1)
+    df_failedimg =  df_copy.loc[(df_copy['condition_error'] == 'Failed to read image')]
     df_failedimg['status'] = 'Excluded'
     df_failedimg['flag_error'] = 'Error'
     if len(df_failedimg) > 0:

@@ -6,15 +6,11 @@ import format
 import settings
 from validations.validations import Validations
 
-def extract_init():
-    all_data = retrieveDB.retrieveAllData()
-
-    visualcheck.checkImageRead(all_data)
-    
-    filter_data = retrieveDB.retrieveAllData(mode='pending') #imageType not Sample
-
+def extract_init():    
+    filter_data = retrieveDB.retrieveAllData(mode='extract') #imageType not Sample
     toext_data = FnameExt(filter_data)
 
+    print('checking filename Data')
     toext_data.fnameTransform()
     toext_data.fnameCopy()
     toext_data.fnameSamples()
@@ -22,9 +18,10 @@ def extract_init():
     toext_data.fnameSetImgry()
     toext_data.fnameDepths()
     toext_data.dropExtractColumns()
-
     data_extracted = toext_data.ext_df
+    print('checking image Data')
     data_imgcheck = visualcheck.checkImageProperties(data_extracted)
+    data_imgcheck['status'] = 'InfoExtracted'
     format.etlToCsv(data_imgcheck,settings.extract_visual)
     while True:
         startcheck = input(f"Check the data; do you want to update it to the table? y/n   ")

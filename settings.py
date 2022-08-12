@@ -17,8 +17,8 @@ def init():
     global upload
 
     # path = r'H:\A0061_YamanaGold_CerroMorro\Old_Batch\\'
-    path = r'H:\IM1037_CRG\\'
-    code_project = 'IM1037'
+    path = r'H:\A0061_YamanaGold_CerroMoro\\'
+    code_project = 'A0061'
     pre_upload = True
 
     name_project = path.split('\\')[1]

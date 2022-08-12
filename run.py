@@ -13,14 +13,16 @@ def run():
     # startCheck.check_init()
     # print("-------------------Extracting Info----------------------")
     # startExtractInfo.extract_init()
-    print("-------------------Visual Check----------------------")
-    startVisualCheck.check_init()
+    # print("-------------------Visual Check----------------------")
+    # startVisualCheck.check_init()
     # print("-------------------Validation----------------------")
     # startValidation.validation_init()
     # #validation
-    # print("-------------------Output/Report----------------------")
-    # #Report
-    # startReport.report_init()
+
+    #merge data and put validate
+    print("-------------------Output/Report----------------------")
+    #Report
+    startReport.report_init()
     # print("-------------------Cloud Check----------------------")
     # #Maybe check Cloud?
     

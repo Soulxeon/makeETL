@@ -13,10 +13,11 @@ class FnameExt:
     def fnameTransform(self):
 
         FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename'].str.replace('(\s\s+)', ' ', regex=True)
+        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.replace(",", ".")
         FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.replace("[#,@,&,!,']", '').str.replace("&", '-')
         FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.upper()
         FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].replace({ '.JPG' : '', '.PNG' : '', '.JPEG' : '' }, regex=True)
-        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.replace(",", ".").str.replace(" ", "_")
+        FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.replace(" ", "_")
         FnameExt.ext_df['filename_fix'] = FnameExt.ext_df['filename_fix'].str.replace("__", "_")
 
     def fnameCopy(self):

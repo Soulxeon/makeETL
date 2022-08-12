@@ -4,6 +4,7 @@ import format
 from startCheck.gen_dataframe import EtlList
 from db_conn import checkTable, retrieveDB
 from validations import dropExistData
+from visualCheck import visualcheck
 
 def check_init():
 
@@ -17,6 +18,7 @@ def check_init():
         folder_df = folderdata.etl
         format.etlToCsv(folder_df,settings.temp_csv)
         checkTable.createETLTable()
+        visualcheck.checkImageRead(folder_df)
         os.remove(settings.temp_csv) 
 
     else:
@@ -35,7 +37,8 @@ def check_init():
             print("new images will be listed: " + str(len(new_data_filter)))
             format.etlToCsv(new_data_filter,settings.temp_csv)
             checkTable.mergeTable()
-            os.remove(settings.temp_csv) 
+            os.remove(settings.temp_csv)
+            visualcheck.checkImageRead(new_data_filter) 
         
     all_data = retrieveDB.retrieveAllData()
     format.etlToCsv(all_data,settings.db_csv)
