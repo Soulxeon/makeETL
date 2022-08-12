@@ -15,9 +15,9 @@ def run():
     # startExtractInfo.extract_init()
     # print("-------------------Visual Check----------------------")
     # startVisualCheck.check_init()
-    # print("-------------------Validation----------------------")
-    # startValidation.validation_init()
-    # #validation
+    print("-------------------Validation----------------------")
+    startValidation.validation_init()
+    #validation
 
     #merge data and put validate
     print("-------------------Output/Report----------------------")

@@ -4,7 +4,7 @@ from visualCheck import visualcheck
 import pandas as pd
 import format
 import settings
-from validations.validations import Validations
+
 
 def extract_init():    
     filter_data = retrieveDB.retrieveAllData(mode='extract') #imageType not Sample
@@ -24,7 +24,7 @@ def extract_init():
     data_imgcheck['status'] = 'InfoExtracted'
     format.etlToCsv(data_imgcheck,settings.extract_visual)
     while True:
-        startcheck = input(f"Check the data; do you want to update it to the table? y/n   ")
+        startcheck = input(f"Check the data; do you want to update the DB table? y/n   ")
         if startcheck == "y":
             print("Table will be updated")
             tmp_tables.merge_extract()
@@ -35,4 +35,3 @@ def extract_init():
             break
         else:
             print("\n please introduce a valid response.\n")
-    # Input if you want to update the table with the new values

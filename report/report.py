@@ -35,6 +35,6 @@ class Report:
 
 
         with pd.ExcelWriter(settings.report, mode='a', engine="openpyxl") as writer:  
-            # imageType.to_excel(writer, sheet_name='Imageries')
+            imageType.to_excel(writer, sheet_name='Imageries')
             count.to_excel(writer, sheet_name='TREE')
             maxmin.to_excel(writer, sheet_name='StartEnd')

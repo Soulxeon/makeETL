@@ -9,7 +9,6 @@ def checkTable():
         conn = psycopg2.connect(**params)
 
         cur = conn.cursor()
-
         cur.execute(f"select exists(select * from pg_tables where tablename ='{settings.table_name}');")
         return(cur.fetchone()[0])
  

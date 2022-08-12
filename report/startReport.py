@@ -9,5 +9,6 @@ def report_init():
     print('Report Done!')
     retrieveDB.exportUpload()
     print('Upload File Done!')
+    df_imagoetl = retrieveDB.exportImagoETL()
 
 

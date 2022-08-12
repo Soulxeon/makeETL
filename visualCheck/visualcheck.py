@@ -39,19 +39,15 @@ def imageProperties(name):
         for orientation in ExifTags.TAGS.keys():
             if ExifTags.TAGS[orientation] == 'Orientation':
                 break
-
         exif = dict(image._getexif().items())
         exif_info = str(exif[orientation])
         width,height = image.size
         return ([int(exif_info),width,height])
-
     except:
         try:
             width,height = image.size
-
         except:
             width,height = 0,0
-
         return ([0,width,height])
 
 

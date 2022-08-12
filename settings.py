@@ -15,10 +15,11 @@ def init():
     global report
     global pre_upload
     global upload
+    global imagoETL
 
     # path = r'H:\A0061_YamanaGold_CerroMorro\Old_Batch\\'
-    path = r'H:\A0061_YamanaGold_CerroMoro\\'
-    code_project = 'A0061'
+    path = r'H:\IM1021_LunnonMetals\\'
+    code_project = 'IM1021'
     pre_upload = True
 
     name_project = path.split('\\')[1]
@@ -31,6 +32,7 @@ def init():
     extract_visual = path + name_project + '_Extract.csv'
     check_depths = path + name_project + '_DChecks.csv'
     upload = path + name_project + '_toUpload.csv'
+    imagoETL = path + name_project + '_imagoETL.csv'
 
     today = datetime.datetime.now().date()
     today_format = today.strftime("%d-%m-%Y")
