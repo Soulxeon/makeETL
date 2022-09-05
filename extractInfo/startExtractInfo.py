@@ -24,7 +24,7 @@ def extract_init():
     data_imgcheck['status'] = 'InfoExtracted'
     format.etlToCsv(data_imgcheck,settings.extract_visual)
     while True:
-        startcheck = input(f"Check the data; do you want to update the DB table? y/n   ")
+        startcheck = input(f"Check the data in {settings.extract_visual}; do you want to update the DB table? y/n   ")
         if startcheck == "y":
             print("Table will be updated")
             tmp_tables.merge_extract()

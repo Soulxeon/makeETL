@@ -14,14 +14,20 @@ def run():
     # print("-------------------Extracting Info----------------------")
     # startExtractInfo.extract_init()
     # print("-------------------Visual Check----------------------")
-    # startVisualCheck.check_init()
+    # # startVisualCheck.check_init()
     print("-------------------Validation----------------------")
     startValidation.validation_init()
-    #validation
-
+    #output for ETL for null depths and Copies
+    #perfrom better copy by grouping by
+    #check wet Dry have same depth
+    # # validation
     #merge data and put validate
     print("-------------------Output/Report----------------------")
     #Report
+    #Askfor Hand Samples
+    #Split in csv
+    #Report show depth Issues-Excluded Images
+    #Report show front number of hand samples and core boxes, maybe depth Issues
     startReport.report_init()
     # print("-------------------Cloud Check----------------------")
     # #Maybe check Cloud?

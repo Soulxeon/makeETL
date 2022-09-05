@@ -31,7 +31,7 @@ def mergeTable():
 
         cur.execute("""CREATE TEMP TABLE temp_merge (filepath varchar, workspace varchar, dataset varchar,collection varchar,filename varchar,imagerytype varchar,imagetype varchar,
                                                      startdepth numeric, enddepth numeric, startbox smallint, endbox smallint, status varchar, flag_error varchar,condition_error varchar,
-                                                     exif smallint, width smallint, height smallint ,img_obs varchar);""")
+                                                     exif smallint, width bigint, height bigint ,img_obs varchar);""")
         
         print('temp_merge created...')
 
@@ -82,8 +82,8 @@ def createETLTable():
                         flag_error varchar(50) ,
                         condition_error varchar(50),
                         exif smallint,
-                        width smallint ,
-                        height smallint,
+                        width bigint ,
+                        height bigint,
                         img_obs varchar(50)
                          );"""
                     )

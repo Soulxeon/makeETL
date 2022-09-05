@@ -17,9 +17,15 @@ def init():
     global upload
     global imagoETL
 
-    # path = r'H:\A0061_YamanaGold_CerroMorro\Old_Batch\\'
+    # path = r'H:\A0061_YamanaGold_CerroMoro\\'
+    # code_project = 'A0061'
+    # path = r'H:\IM1035_EvolutionMining\\'
+    # code_project = 'IM1035'
+    # path = r'H:\IM1061_AngloKumbaDMT\\'
+    # code_project = 'IM1061'
     path = r'H:\IM1021_LunnonMetals\\'
     code_project = 'IM1021'
+
     pre_upload = True
 
     name_project = path.split('\\')[1]

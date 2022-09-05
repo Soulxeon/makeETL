@@ -23,13 +23,13 @@ class EtlList:
                 emptyDirs.append(dirpath)
         if len(emptyDirs) > 0:
             print("there are empty folders!")
-            with open(self.path + 'Emptyfolder.txt', 'w') as f:
+            with open(self.path + 'Emptyfolder.txt', 'a') as f:
                 for elem in emptyDirs: 
                     f.write(f'{elem}\n')              
             f.close()
 
     def readQuick(self):
-        for name in glob.glob(self.path + '**\*.[jpt][pni][gf]*', recursive=True):
+        for name in glob.glob(self.path + '**\*.[jpt][pni][egf]*', recursive=True):
             EtlList.etl.loc[len(EtlList.etl.index),'filepath'] = name
             EtlList.count += 1
             if EtlList.count % 1000 == 0:
